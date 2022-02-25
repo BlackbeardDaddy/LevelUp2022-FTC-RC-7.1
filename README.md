@@ -1,3 +1,19 @@
+## Level Up FTC9261 Fork of FTC-RC
+
+Default branch is Beta, Master branch is to stay up to date with the FTC-RC, since this is a fork.  
+
+Branch structure:
+	- Default: Beta (Compare me in pull requests)
+	- Fork Template: Master (Attempts to merge will be blocked)
+	- Archival: Alpha (For comps, and most stable) 
+
+This repository has been modified to fit the needs of FTC 9261.  It includes the following additions:
+	- EasyOpenCV (Gradle not configured)
+	- OpenCV Repackaged (Gradle not configured)
+	- TOF10120 Distance Sensor Driver (I2C, limited functions)
+	- TeleOps, Pipelines, and Autonomos classes
+	- Renamed hardware map vars
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
