@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.CVPipelines.DuckPipeline;
@@ -40,6 +42,13 @@ public class CVtest extends LinearOpMode{
 
     @Override
     public void runOpMode() {
+        DcMotor frontleftDrive = hardwareMap.dcMotor.get("frontleftDrive");
+        DcMotor backleftDrive = hardwareMap.dcMotor.get("backleftDrive");
+        DcMotor frontrightDrive = hardwareMap.dcMotor.get("frontrightDrive");
+        DcMotor backrightDrive = hardwareMap.dcMotor.get("backrightDrive");
+        DcMotor spinnySpin = hardwareMap.dcMotor.get("spinnySpin");
+        frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        backrightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         WebcamName webcam = hardwareMap.get(WebcamName.class, "Webcam1");
@@ -87,7 +96,7 @@ public class CVtest extends LinearOpMode{
 
             //Print out the area of the rectangle that is found.
             telemetry.addData("Rectangle Area", rectangleArea);
-
+//TODO CHANGE CAM WIDTH TO MAXRECT WIDTH
             //Check to see if the rectangle has a large enough area to be a marker.
             if(rectangleArea > minRectangleArea){
                 //Then check the location of the rectangle to see which barcode it is in.
@@ -95,16 +104,19 @@ public class CVtest extends LinearOpMode{
                     telemetry.addData("Barcode Position", "Right");
                     telemetry.addData("CV LOG","Midpoint: " + pipeline.getRectMidpointX() + " right bound: "+ rightBarcodeRangeBoundary * pipeline.getCAMERA_WIDTH());
                     telemetry.update();
+                    //TODO Add what right capstone does
                 }
                 else if(pipeline.getRectMidpointX() < leftBarcodeRangeBoundary * pipeline.getCAMERA_WIDTH()){
                     telemetry.addData("Barcode Position", "Left");
                     telemetry.addData("CV LOG","Midpoint: " + pipeline.getRectMidpointX() + " left bound: "+ leftBarcodeRangeBoundary * pipeline.getCAMERA_WIDTH());
                     telemetry.update();
+                    //TODO Add what left capstone does
                 }
                 else {
                     telemetry.addData("Barcode Position", "Center");
                     telemetry.addData("CV LOG", "Midpoint: " + pipeline.getRectMidpointX());
                     telemetry.update();
+                    //TODO Add what center capstone does
                 }
             }
 
