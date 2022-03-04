@@ -124,7 +124,7 @@ public class OmniWheelTeleOpBlue extends LinearOpMode {
                 //Do when toggle is on
                 telemetry.addData("Status","close claw");
                 telemetry.update();
-                claw.setPower(-0.5);
+                claw.setPower(-0.8);
                 //sleep(1000);
                 //claw.setPower(0);
 

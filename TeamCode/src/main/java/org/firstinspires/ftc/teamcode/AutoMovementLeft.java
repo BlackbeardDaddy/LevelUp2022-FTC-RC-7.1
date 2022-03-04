@@ -33,6 +33,8 @@ public class AutoMovementLeft extends LinearOpMode {
         frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         backrightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        claw.setPower(-0.8);
+
         waitForStart();
         //This starts the bot
         sleep(1000);

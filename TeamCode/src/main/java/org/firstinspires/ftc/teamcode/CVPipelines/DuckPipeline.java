@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.CVPipelines;
 
+import android.icu.util.Output;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -18,11 +20,11 @@ import java.util.List;
 // Re-calibrated to identify ducks -- or shipping element -- 9261 Level Up
 
 public class DuckPipeline extends OpenCvPipeline {
-    Scalar CYAN = new Scalar(200, 70, 160);
+    Scalar HOT_PINK = new Scalar(196, 23, 112);
 
-    // Cyan (MODIFIED)                           Y      Cr     Cb    (Do not change Y)
-    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 0, 160);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 70, 180);
+    // BLUE (MODIFIED)                        Y      Cr     Cb    (Do not change Y)
+    public static Scalar scalarLowerYCrCb = new Scalar(0, 0, 170);
+    public static Scalar scalarUpperYCrCb = new Scalar(255, 128, 255);
 
     // Green                                             Y      Cr     Cb
     // public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 0.0, 0.0);
@@ -34,10 +36,10 @@ public class DuckPipeline extends OpenCvPipeline {
     public volatile boolean error = false;
     public volatile Exception debug;
 
-    private double borderLeftX = 0.0;   //fraction of pixels from the left side of the cam to skip
-    private double borderRightX = 0.0;   //fraction of pixels from the right of the cam to skip
-    private double borderTopY = 0.0;   //fraction of pixels from the top of the cam to skip
-    private double borderBottomY = 0.0;   //fraction of pixels from the bottom of the cam to skip
+    private double borderLeftX = 1;   //fraction of pixels from the left side of the cam to skip
+    private double borderRightX = 1;   //fraction of pixels from the right of the cam to skip
+    private double borderTopY = 1;   //fraction of pixels from the top of the cam to skip
+    private double borderBottomY = 1;   //fraction of pixels from the bottom of the cam to skip
 
     private int CAMERA_WIDTH;
     private int CAMERA_HEIGHT;
@@ -48,6 +50,7 @@ public class DuckPipeline extends OpenCvPipeline {
     private Mat mat = new Mat();
     private Mat processed = new Mat();
     private Mat output = new Mat();
+    public Mat SendToViewPort = new Mat();
 
     private Rect maxRect = new Rect(600,1,1,1);
     private Rect rect = new Rect(600,1,1,1);
@@ -86,6 +89,12 @@ public class DuckPipeline extends OpenCvPipeline {
         CAMERA_HEIGHT = input.height();
         try {
             // Process Image
+            Imgproc.cvtColor(input, SendToViewPort, Imgproc.COLOR_RGB2YCrCb);
+            Imgproc.morphologyEx(SendToViewPort, SendToViewPort, Imgproc.MORPH_OPEN, new Mat());
+            Imgproc.morphologyEx(SendToViewPort, SendToViewPort, Imgproc.MORPH_CLOSE, new Mat());
+            Imgproc.GaussianBlur(SendToViewPort, SendToViewPort, new Size(5.0, 15.0), 0.00);
+
+
             Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2YCrCb);
             Core.inRange(mat, scalarLowerYCrCb, scalarUpperYCrCb, processed);
             // Core.bitwise_and(input, input, output, processed);
@@ -101,6 +110,7 @@ public class DuckPipeline extends OpenCvPipeline {
 
             // Draw Contours
             Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0));
+            Imgproc.drawContours(SendToViewPort, contours, -1, new Scalar(255, 0, 0));
 
             //lock this up to prevent errors when outside threads access the max rect property.
             synchronized (sync) {
@@ -135,25 +145,27 @@ public class DuckPipeline extends OpenCvPipeline {
             }
             // Draw Rectangles If Area Is At Least 500
             if (first && maxRect.area() > 500) {
-                Imgproc.rectangle(input, maxRect, new Scalar(0, 255, 0), 2);
+                Imgproc.rectangle(SendToViewPort, maxRect, new Scalar(0, 255, 0), 2);
             }
             // Draw Borders
-            Imgproc.rectangle(input, new Rect(
+            Imgproc.rectangle(SendToViewPort, new Rect(
                     (int) (borderLeftX * CAMERA_WIDTH),
                     (int) (borderTopY * CAMERA_HEIGHT),
                     (int) (CAMERA_WIDTH - (borderRightX * CAMERA_WIDTH) - (borderLeftX * CAMERA_HEIGHT)),
                     (int) (CAMERA_HEIGHT - (borderBottomY * CAMERA_WIDTH) - (borderTopY * CAMERA_HEIGHT))
-            ), CYAN, 2);
+            ), HOT_PINK, 2);
 
             // Display Data
-            Imgproc.putText(input, "Area: " + getRectArea() + " Midpoint: " + getRectMidpointXY().x + " , " + getRectMidpointXY().y, new Point(5, CAMERA_HEIGHT - 5), 0, 0.6, new Scalar(255, 255, 255), 2);
-
+            Imgproc.putText(SendToViewPort, "Area: " + getRectArea() + " Midpoint: " + getRectMidpointXY().x + " , " + getRectMidpointXY().y, new Point(5, CAMERA_HEIGHT - 5), 0, 1, new Scalar(255, 255, 255), 2);
+           //flip viewport for tuning
+            Core.flip(SendToViewPort,SendToViewPort,1);
             loopCounter++;
         } catch (Exception e) {
             debug = e;
             error = true;
         }
-        return input;
+
+        return SendToViewPort;
     }
     /*
     Synchronize these operations as the user code could be incorrect otherwise, i.e a property is read
@@ -161,6 +173,11 @@ public class DuckPipeline extends OpenCvPipeline {
     synced.
      */
 
+    public int getCAMERA_WIDTH() {
+        synchronized (sync) {
+            return CAMERA_WIDTH;
+        }
+    }
 
     public int getRectHeight() {
         synchronized (sync) {

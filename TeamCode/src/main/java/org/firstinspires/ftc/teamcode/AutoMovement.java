@@ -16,8 +16,8 @@ import com.qualcomm.robotcore.util.Range;
 public class AutoMovement extends LinearOpMode {
 
 
-    
-    
+
+
 
 
     @Override
@@ -30,32 +30,20 @@ public class AutoMovement extends LinearOpMode {
         CRServo claw = hardwareMap.crservo.get("claw");
         CRServo boxcar = hardwareMap.crservo.get("boxcar");
         frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        
         backrightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        claw.setPower(-0.8);
+
         waitForStart();
         //This starts the bot
-        //sleep(1000);
-        //boxcar.setPower(1);
-        //telemetry.addData("Move", "Man");
-        //telemetry.update();
-        //sleep(5000);
-        //boxcar.setPower(-1);
-        //telemetry.addData("Move", "back");
-        //telemetry.update();
-        //sleep(3000);
-        //boxcar.setPower(0);
-        //telemetry.addData("Move", "done");
-        //telemetry.update();
-        
-        
-        
+        sleep(270);
+
         telemetry.addData("Status","Starting motion");
         telemetry.update();
-        frontleftDrive.setPower(1);
-        frontrightDrive.setPower(1);
-        backleftDrive.setPower(1);
-        backrightDrive.setPower(1);
-        sleep(3500);
+        frontleftDrive.setPower(0.4);
+        frontrightDrive.setPower(0.4);
+        backleftDrive.setPower(0.4);
+        backrightDrive.setPower(0.5);
+        sleep(200);
 
         telemetry.addData("All Stop", "Comencing Action");
         telemetry.update();
@@ -63,14 +51,17 @@ public class AutoMovement extends LinearOpMode {
         frontrightDrive.setPower(0);
         backleftDrive.setPower(0);
         backrightDrive.setPower(0);
-    
+
+
+
        /* sleep(1000);
         telemetry.addData("Moving Backwards","Starting Motion");
         telemetry.update();
+
        frontleftDrive.setPower(-1);
        frontrightDrive.setPower(-1);
        backleftDrive.setPower(-1);
-       backrightDrive.setPower(-1); 
+       backrightDrive.setPower(-1);
        sleep (4000);
        telemetry.addData ("All Stop","Comenceing Action");
        telemetry.update();
@@ -78,8 +69,8 @@ public class AutoMovement extends LinearOpMode {
        frontrightDrive.setPower(0);
        backleftDrive.setPower(0);
        backrightDrive.setPower(0);*/
-        
-        
+
+
 
 
     }

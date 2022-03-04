@@ -22,7 +22,7 @@ public class LaserTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Raw", Laser.getDistance(DistanceUnit.MM));
+            telemetry.addData("Raw", Laser.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 

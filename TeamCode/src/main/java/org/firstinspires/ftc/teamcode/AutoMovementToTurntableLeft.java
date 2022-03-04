@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -23,9 +24,12 @@ public class AutoMovementToTurntableLeft extends LinearOpMode {
         DcMotor frontrightDrive = hardwareMap.dcMotor.get("frontrightDrive");
         DcMotor backrightDrive = hardwareMap.dcMotor.get("backrightDrive");
         DcMotor spinnySpin = hardwareMap.dcMotor.get("spinnySpin");
+        CRServo claw = hardwareMap.crservo.get("claw");
         frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         backrightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        claw.setPower(-0.8);
+
         waitForStart();
         //This starts the bot
         sleep(1000);
